@@ -1,0 +1,13 @@
+{
+  "name": "kt/homework3_base",
+  "require": {
+    "php": ">=8.0",
+    "symfony/dependency-injection": "^4.3",
+    "symfony/config": "^4.3"
+  },
+  "autoload": {
+    "psr-4": {
+      "Source\\": "src/"
+    }
+  }
+}
