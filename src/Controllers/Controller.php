@@ -6,7 +6,8 @@ require_once 'global_functions.php';
 
 abstract class Controller
 {
-    function __construct()
+    function __construct($template)
     {
+        $this->template = $template;
     }
 }

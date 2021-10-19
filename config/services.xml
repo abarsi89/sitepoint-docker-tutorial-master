@@ -10,5 +10,7 @@
     <services>
         <service id="sample_service" class="Source\Sample\SampleService">
         </service>
+        <service id="smarty" class="vendor/smarty/smarty/libs/Smarty.class.php">
+        </service>
     </services>
 </container>

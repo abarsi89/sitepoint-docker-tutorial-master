@@ -1,6 +1,9 @@
 <?php
 
 use Source\Router\Router;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
 function bootstrapYourself($routes)
 {
@@ -21,11 +24,25 @@ function bootstrapYourself($routes)
             $class = "Source\Controllers\\".ucfirst($uriParts[1]).'Controller';
             var_dump($class);
             $controller = new $class();
-//            $containerBuilder = new ContainerBuilder();
-//            $containerBuilder->register('mailer', 'Mailer');
+
+            $containerBuilder = new ContainerBuilder();
+            $loader = new XmlFileLoader($containerBuilder, new FileLocator(__DIR__));
+            $loader->load('services.xml');
+
+//            require '../libs/Smarty.class.php';
+//            $smarty = new Smarty;
+
             $controller->index();
         });
     }
+
+
+    $this->containerBuilder = new ContainerBuilder();
+    $loader = new XmlFileLoader($this->containerBuilder, new FileLocator(dirname(__DIR__, 3) . DIRECTORY_SEPARATOR . "config"));
+    $loader->load('services.xml');
+    $this->containerBuilder->compile();
+
+    $smarty = $containerBuilder->get("smarty");
 
     /**
      * Run it!
