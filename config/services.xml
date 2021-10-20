@@ -8,9 +8,14 @@
     </parameters>
 
     <services>
+        <defaults autowire="true" autoconfigure="true" public="true"/>
         <service id="sample_service" class="Source\Sample\SampleService">
         </service>
-        <service id="smarty" class="vendor/smarty/smarty/libs/Smarty.class.php">
+        <service id="Smarty" class="Smarty">
+        </service>
+        <service id="Controller" class="Source\Controllers\Controller">
+        </service>
+        <service id="HelloController" class="Source\Controllers\HelloController">
         </service>
     </services>
 </container>

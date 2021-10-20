@@ -1,6 +1,6 @@
 <?php
 
-$routes = [
+return [
     'hello'     =>  'HelloController',
 //    'admin/hello/{id}'     =>  'HelloController',
 //    'admin/hello/{id}'     =>  'HelloController@index',
