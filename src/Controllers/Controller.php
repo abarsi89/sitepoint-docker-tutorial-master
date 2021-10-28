@@ -2,12 +2,14 @@
 
 namespace Source\Controllers;
 
-require_once 'global_functions.php';
+use Smarty;
 
 abstract class Controller
 {
-    function __construct($template)
+    protected $smarty;
+
+    function __construct(Smarty $smarty)
     {
-        $this->template = $template;
+        $this->smarty = $smarty;
     }
 }
