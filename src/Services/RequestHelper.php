@@ -34,8 +34,17 @@ class RequestHelper
         $routeParts = explode("/", $route);
         $uriParts = array_values(array_filter(explode("/", $currentUri)));
 
-        $uriParams = array_combine($routeParts, $uriParts);
-        var_dump($uriParams);die();
+        $combinedArray = array_combine($routeParts, $uriParts);
+
+        $filteredArray = array_filter($combinedArray, function($k) {
+            return str_starts_with($k, "{");
+        }, ARRAY_FILTER_USE_KEY);
+
+        $uriParams = [];
+        foreach ($filteredArray as $key => $value) {
+            $key = trim($key, '{}');
+            $uriParams[$key] = $value;
+        }
 
 //        array(asdasd=123,uilulk=444)
         return $uriParams;

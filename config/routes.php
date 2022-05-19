@@ -13,5 +13,11 @@ return [
     'asdf/sadfasdf/{asdasd}/sddg/sdfsdf/{uilulk}' => [
         'POST' => 'HelloController@postShow',
         'GET' => 'HelloController@getShow',
-    ]
+    ],
+    'other/show/{id}/{name}' => [
+        'GET' => 'OtherController@getShow',
+    ],
+    'another/show/{id}' => [
+        'GET' => 'AnotherController@getShow',
+    ],
 ];

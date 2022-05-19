@@ -19,6 +19,9 @@ class HelloController extends Controller
 
     public function getShow($id)
     {
-        return include(dirname(__DIR__, 1) . DIRECTORY_SEPARATOR. 'Views' . DIRECTORY_SEPARATOR . 'hello.view.php');;
+        $this->smarty->assign('name', 'Bello');
+        $this->smarty->assign('id', $id);
+        $this->smarty->display('hello.view.tpl');
+//        $this->smarty->testInstall();
     }
 }

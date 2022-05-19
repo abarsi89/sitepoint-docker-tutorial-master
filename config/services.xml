@@ -17,5 +17,7 @@
         </service>
         <service id="HelloController" class="Source\Controllers\HelloController">
         </service>
+        <service id="OtherController" class="Source\Controllers\OtherController">
+        </service>
     </services>
 </container>

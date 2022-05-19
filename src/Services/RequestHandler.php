@@ -2,6 +2,7 @@
 
 namespace Source\Services;
 
+use Monolog\Logger;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
@@ -10,9 +11,10 @@ class RequestHandler
 {
     private ContainerBuilder $containerBuilder;
 
-    public function __construct(ContainerBuilder $containerBuilder)
+    public function __construct(ContainerBuilder $containerBuilder, Logger $logger)
     {
         $this->containerBuilder = $containerBuilder;
+        $this->logger = $logger;
     }
 
     public function handle()
@@ -34,29 +36,35 @@ class RequestHandler
         */
         $helper = new RequestHelper();
 
+        $matched = false;
+
         foreach ($routes as $route => $controllerMethods) {
             //az aktuális URL létezik-e a route-ok között
             if ($helper::isMatch("$_SERVER[REQUEST_URI]", $route)) {
-                print_r("yayy", true);
 
                 $uriParams = $helper::getUriParams("$_SERVER[REQUEST_URI]", $route);
-
-                $uriParts = explode("/", "$_SERVER[REQUEST_URI]");
-
 //                var_dump($uriParams);
-//                var_dump($uriParts); die();
-//                var_dump($controllerMethods);
-//                var_dump($_SERVER['REQUEST_METHOD']);
 
                 $controllerMethod = explode('@', $controllerMethods[$_SERVER['REQUEST_METHOD']]);
                 $controller = $controllerMethod[0];
                 $method = $controllerMethod[1];
 
+                // check controller és method
+
+                $matched = true;
+
                 try {
                     $currentController = $this->containerBuilder->get($controller);
-                    $currentController->{$method}($uriParts[3]);
+                    $currentController->{$method}(...array_values($uriParams));
                 } catch (\Exception $exception) {
-                    var_dump($exception->getMessage());
+                    $matched = false;
+                    $this->logger->error($exception->getMessage());
+                    // logable és nem-logable exception-ök
+                    // logger ki-bekapcsolhatósága
+                    // program bármely pontján lehessen logolni
+                    // logger implementálása: dependency injection? statikus?
+                    // exception kezelés (többféle exception)
+                    // GET/POST változók leszedése a controller-ben
                 }
 
                         //url nem létezik
@@ -69,9 +77,13 @@ class RequestHandler
             }
         }
 
-        http_response_code(404);
-        include(dirname(__DIR__, 1) . DIRECTORY_SEPARATOR. 'Views' . DIRECTORY_SEPARATOR . '404.php'); // provide your own HTML for the error page
-        die();
+        if ($matched) {
+            http_response_code(200);
+        } else {
+            http_response_code(404);
+            include(dirname(__DIR__, 1) . DIRECTORY_SEPARATOR. 'Views' . DIRECTORY_SEPARATOR . '404.php'); // provide your own HTML for the error page
+            die();
+        }
     }
 
     private function containerCompile()
